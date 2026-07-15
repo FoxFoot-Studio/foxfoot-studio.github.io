@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="FinanceFox personal budgeting, outgoings and debt repayment tracker"
+  />
+  <title>FinanceFox</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ==================================================
+         HEADER
+    =================================================== -->
+    <header class="app-header">
+      <div class="brand">
+        <h1>💸 FinanceFox 🦊</h1>
+        <p>🌕 Money is Magick ✨ It makes the world go round! 🪙</p>
+      </div>
+
+      <div class="header-budget-month">
+        <span class="eyebrow">BUDGET MONTH</span>
+        <strong data-budget-month-display>Budget Month</strong>
+        <input
+          id="budget-month"
+          type="month"
+          aria-label="Select budget month"
+        />
+      </div>
+
+      <button
+        id="theme-toggle"
+        class="icon-button"
+        type="button"
+        aria-label="Switch colour theme"
+      >🌙</button>
+    </header>
+
+    <!-- ==================================================
+         NAVIGATION
+    =================================================== -->
+    <nav class="tab-bar" aria-label="FinanceFox sections">
+      <button class="tab active" type="button" data-tab="home">Home</button>
+      <button class="tab" type="button" data-tab="income">Income Budget</button>
+      <button class="tab" type="button" data-tab="outgoings">Outgoings</button>
+      <button class="tab" type="button" data-tab="debts">Debts</button>
+      <button class="tab" type="button" data-tab="notes">Notes</button>
+    </nav>
+
+    <main>
+      <!-- ==================================================
+           HOME
+      =================================================== -->
+      <section id="panel-home" class="panel active">
+        <div class="home-splash">
+          <div class="splash-symbol">🦊</div>
+          <p class="eyebrow">PERSONAL FINANCE WORKSPACE</p>
+          <h2>FinanceFox</h2>
+          <p class="home-introduction">
+            A private workspace for organising income, regular bills,
+            other outgoings, debt repayments and financial notes.
+          </p>
+          <div class="placeholder-art" aria-hidden="true">
+            <span>◆</span><span>◇</span><span>◆</span><span>◇</span><span>◆</span>
+          </div>
+          <p class="placeholder-message">
+            Placeholder home screen — replace this with your own artwork,
+            dashboard or branding later.
+          </p>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           INCOME
+      =================================================== -->
+      <section id="panel-income" class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">MONEY COMING IN</p>
+            <h2>Income Budget</h2>
+          </div>
+          <button
+            class="secondary-button"
+            type="button"
+            data-add-column="income"
+          >+ Custom Column</button>
+        </div>
+
+        <form
+          id="income-form"
+          class="entry-form"
+          data-entry-form="income"
+          data-frequency-form
+        >
+          <input
+            type="text"
+            data-field="source"
+            placeholder="Source, e.g. ESA"
+            aria-label="Income source"
+          />
+          <input
+            type="text"
+            data-field="description"
+            placeholder="Description"
+            aria-label="Income description"
+          />
+          <input
+            type="number"
+            data-field="amount"
+            placeholder="Amount per payment"
+            aria-label="Amount per payment"
+            min="0"
+            step="0.01"
+          />
+          <select data-field="frequency" aria-label="Income frequency">
+            <option value="monthly">Monthly</option>
+            <option value="twice-monthly">Twice monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="fortnightly">Every 2 weeks</option>
+            <option value="four-weekly">Every 4 weeks</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="annual">Annually</option>
+            <option value="one-off">One-off</option>
+            <option value="other">Other</option>
+          </select>
+          <input
+            type="number"
+            data-field="paymentsPerMonth"
+            placeholder="Payments per month"
+            aria-label="Payments per month"
+            min="0"
+            step="0.01"
+            value="1"
+          />
+          <input
+            type="text"
+            data-field="paymentDay"
+            placeholder="Day of month, e.g. 8th"
+            aria-label="Usual payment day"
+          />
+          <div id="income-custom-inputs" class="custom-inputs"></div>
+          <button class="primary-button" type="submit">+ Add Income</button>
+        </form>
+
+        <p class="helper-text">
+          Monthly income is calculated as amount per payment × payments per month.
+          The frequency and payment-day fields describe when it arrives.
+        </p>
+
+        <div class="table-frame">
+          <table>
+            <thead id="income-head"></thead>
+            <tbody id="income-body"></tbody>
+          </table>
+        </div>
+
+        <div class="summary-row">
+          <div class="table-total">
+            <span>Monthly Income</span>
+            <strong id="income-total">£0.00</strong>
+          </div>
+          <div class="table-total">
+            <span>Payments Per Month</span>
+            <strong id="income-payment-count">0</strong>
+          </div>
+        </div>
+
+        <div class="budget-breakdown">
+          <div class="breakdown-heading">
+            <p class="eyebrow">MONTHLY INCOME PLAN</p>
+            <h3>Income by Source</h3>
+          </div>
+          <div id="income-summary" class="summary-grid"></div>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           COMBINED OUTGOINGS PAGE
+      =================================================== -->
+      <section id="panel-outgoings" class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">MONTHLY SPENDING</p>
+            <h2>Outgoings</h2>
+          </div>
+          <div class="section-month-label">
+            <span>Tracking payments for</span>
+            <strong data-budget-month-display>Budget Month</strong>
+          </div>
+        </div>
+
+        <!-- REGULAR BILLS -->
+        <section class="subsection-card">
+          <div class="subsection-heading">
+            <div>
+              <p class="eyebrow">FIXED AND REPEATING PAYMENTS</p>
+              <h3>Regular Bills</h3>
+            </div>
+            <button
+              class="secondary-button"
+              type="button"
+              data-add-column="bills"
+            >+ Custom Column</button>
+          </div>
+
+          <form
+            id="bills-form"
+            class="entry-form"
+            data-entry-form="bills"
+            data-frequency-form
+          >
+            <input
+              type="text"
+              data-field="company"
+              placeholder="Company / Payee"
+              aria-label="Bill company or payee"
+            />
+            <input
+              type="text"
+              data-field="category"
+              placeholder="Category, e.g. Utilities"
+              aria-label="Bill category"
+            />
+            <input
+              type="number"
+              data-field="amount"
+              placeholder="Amount per payment"
+              aria-label="Bill amount per payment"
+              min="0"
+              step="0.01"
+            />
+            <select data-field="frequency" aria-label="Bill frequency">
+              <option value="monthly">Monthly</option>
+              <option value="twice-monthly">Twice monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="fortnightly">Every 2 weeks</option>
+              <option value="four-weekly">Every 4 weeks</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annually</option>
+              <option value="one-off">One-off</option>
+              <option value="other">Other</option>
+            </select>
+            <input
+              type="number"
+              data-field="paymentsPerMonth"
+              placeholder="Payments per month"
+              aria-label="Bill payments per month"
+              min="0"
+              step="0.01"
+              value="1"
+            />
+            <input
+              type="text"
+              data-field="dueDay"
+              placeholder="Due day, e.g. 15th"
+              aria-label="Bill due day"
+            />
+            <input
+              type="text"
+              data-field="accountReference"
+              placeholder="Account reference"
+              aria-label="Account reference"
+            />
+            <input
+              type="tel"
+              data-field="phone"
+              placeholder="Phone number"
+              aria-label="Company phone number"
+            />
+            <div id="bills-custom-inputs" class="custom-inputs"></div>
+            <button class="primary-button" type="submit">+ Add Bill</button>
+          </form>
+
+          <div class="table-frame">
+            <table>
+              <thead id="bills-head"></thead>
+              <tbody id="bills-body"></tbody>
+            </table>
+          </div>
+
+          <div class="summary-row">
+            <div class="table-total">
+              <span>Regular Bills</span>
+              <strong id="bills-total">£0.00</strong>
+            </div>
+            <div class="table-total">
+              <span>Paid This Month</span>
+              <strong id="bills-paid-count">0/0</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- OTHER OUTGOINGS -->
+        <section class="subsection-card">
+          <div class="subsection-heading">
+            <div>
+              <p class="eyebrow">VARIABLE AND PLANNED SPENDING</p>
+              <h3>Other Outgoings</h3>
+            </div>
+            <button
+              class="secondary-button"
+              type="button"
+              data-add-column="outgoings"
+            >+ Custom Column</button>
+          </div>
+
+          <form
+            id="outgoings-form"
+            class="entry-form"
+            data-entry-form="outgoings"
+            data-frequency-form
+          >
+            <input
+              type="text"
+              data-field="description"
+              placeholder="Description"
+              aria-label="Outgoing description"
+            />
+            <input
+              type="text"
+              data-field="category"
+              placeholder="Category"
+              aria-label="Outgoing category"
+            />
+            <input
+              type="number"
+              data-field="amount"
+              placeholder="Amount per payment"
+              aria-label="Outgoing amount per payment"
+              min="0"
+              step="0.01"
+            />
+            <select data-field="frequency" aria-label="Outgoing frequency">
+              <option value="monthly">Monthly</option>
+              <option value="twice-monthly">Twice monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="fortnightly">Every 2 weeks</option>
+              <option value="four-weekly">Every 4 weeks</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annually</option>
+              <option value="one-off">One-off</option>
+              <option value="other">Other</option>
+            </select>
+            <input
+              type="number"
+              data-field="paymentsPerMonth"
+              placeholder="Payments per month"
+              aria-label="Outgoing payments per month"
+              min="0"
+              step="0.01"
+              value="1"
+            />
+            <input
+              type="text"
+              data-field="paymentDay"
+              placeholder="Payment day or pattern"
+              aria-label="Outgoing payment day"
+            />
+            <div id="outgoings-custom-inputs" class="custom-inputs"></div>
+            <button class="primary-button" type="submit">+ Add Outgoing</button>
+          </form>
+
+          <div class="table-frame">
+            <table>
+              <thead id="outgoings-head"></thead>
+              <tbody id="outgoings-body"></tbody>
+            </table>
+          </div>
+
+          <div class="summary-row">
+            <div class="table-total">
+              <span>Other Outgoings</span>
+              <strong id="other-outgoings-total">£0.00</strong>
+            </div>
+            <div class="table-total">
+              <span>Paid This Month</span>
+              <strong id="other-outgoings-paid-count">0/0</strong>
+            </div>
+          </div>
+        </section>
+
+        <div class="overall-total-card">
+          <span>Total Monthly Outgoings</span>
+          <strong id="outgoings-total">£0.00</strong>
+        </div>
+
+        <div class="budget-breakdown">
+          <div class="breakdown-heading">
+            <p class="eyebrow">CATEGORY SUMMARY</p>
+            <h3>All Outgoings by Category</h3>
+          </div>
+          <div id="outgoings-category-summary" class="summary-grid"></div>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           DEBTS
+      =================================================== -->
+      <section id="panel-debts" class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">REPAYMENT PLANNING</p>
+            <h2>Debts</h2>
+          </div>
+          <div class="section-month-label">
+            <span>Tracking repayments for</span>
+            <strong data-budget-month-display>Budget Month</strong>
+          </div>
+        </div>
+
+        <form id="debt-form" class="entry-form debt-form">
+          <input
+            type="text"
+            data-field="originalCompany"
+            placeholder="Original company / creditor"
+            aria-label="Original company or creditor"
+          />
+          <input
+            type="number"
+            data-field="originalAmount"
+            placeholder="Original debt amount"
+            aria-label="Original debt amount"
+            min="0"
+            step="0.01"
+          />
+          <input
+            type="text"
+            data-field="originalReference"
+            placeholder="Original account reference"
+            aria-label="Original account reference"
+          />
+          <input
+            type="tel"
+            data-field="companyPhone"
+            placeholder="Company phone number"
+            aria-label="Company phone number"
+          />
+          <input
+            type="text"
+            data-field="collectionAgency"
+            placeholder="Collection agency"
+            aria-label="Collection agency"
+          />
+          <input
+            type="text"
+            data-field="collectionReference"
+            placeholder="Collection account reference"
+            aria-label="Collection account reference"
+          />
+          <input
+            type="number"
+            data-field="monthlyRepayment"
+            placeholder="Monthly repayment"
+            aria-label="Monthly repayment"
+            min="0"
+            step="0.01"
+          />
+          <input
+            type="text"
+            data-field="paymentDate"
+            placeholder="Payment date, e.g. 20th"
+            aria-label="Debt payment date"
+          />
+          <button class="primary-button" type="submit">+ Add Debt</button>
+        </form>
+
+        <div class="table-frame debt-table-frame">
+          <table>
+            <thead>
+              <tr>
+                <th>Original Company</th>
+                <th>Debt Amount</th>
+                <th>Original Reference</th>
+                <th>Phone</th>
+                <th>Collection Agency</th>
+                <th>Collection Reference</th>
+                <th>Monthly Repayment</th>
+                <th>Payment Date</th>
+                <th>Months Left</th>
+                <th>Remaining</th>
+                <th>Paid?</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody id="debt-body"></tbody>
+          </table>
+        </div>
+
+        <div class="summary-row">
+          <div class="table-total">
+            <span>Monthly Debt Repayments</span>
+            <strong id="debt-monthly-total">£0.00</strong>
+          </div>
+        </div>
+
+        <div class="budget-breakdown">
+          <div class="breakdown-heading">
+            <p class="eyebrow">MONTHLY COMMITMENTS</p>
+            <h3>Debt Repayments by Account</h3>
+          </div>
+          <div id="debt-payment-summary" class="summary-grid"></div>
+        </div>
+
+        <div class="timeline-heading">
+          <p class="eyebrow">RIGHT-TO-LEFT REPAYMENT TRACKERS</p>
+          <h3>Debt Timelines</h3>
+          <p>
+            The final month is paid first. A 25-month plan turns month 25 green,
+            then month 24, shrinking the unpaid section from right to left.
+            The outlined green tick is the latest payment and can be clicked to undo it.
+          </p>
+        </div>
+
+        <div id="debt-timelines" class="debt-timelines"></div>
+      </section>
+
+      <!-- ==================================================
+           NOTES
+      =================================================== -->
+      <section id="panel-notes" class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">FINANCIAL DIARY</p>
+            <h2>Notes</h2>
+          </div>
+        </div>
+
+        <form id="notes-form" class="notes-form">
+          <input
+            id="note-title"
+            type="text"
+            placeholder="Note title"
+            aria-label="Note title"
+            required
+          />
+          <textarea
+            id="note-body"
+            placeholder="Write your note here..."
+            aria-label="Note body"
+            rows="8"
+            required
+          ></textarea>
+          <button class="primary-button" type="submit">Save Note</button>
+        </form>
+
+        <div class="diary-heading">
+          <p class="eyebrow">CHRONOLOGICAL RECORD</p>
+          <h3>Diary</h3>
+        </div>
+        <div id="notes-list" class="notes-list"></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

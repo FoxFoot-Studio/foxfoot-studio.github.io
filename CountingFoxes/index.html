@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CountingFoxes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>CountingFoxes</h1>
+        <p>Paste raw text. Count words, lines and characters. Markdown gets stripped for clean counting.</p>
+      </div>
+      <div class="fox-mark">🦊</div>
+    </header>
+
+    <section class="counter-grid">
+      <article class="counter-card">
+        <span class="label">Words</span>
+        <strong id="wordCount">0</strong>
+        <small>Markdown stripped</small>
+      </article>
+
+      <article class="counter-card">
+        <span class="label">Lines</span>
+        <strong id="lineCount">0</strong>
+        <small>As pasted</small>
+      </article>
+
+      <article class="counter-card">
+        <span class="label">Characters</span>
+        <strong id="charCount">0</strong>
+        <small>Raw text</small>
+      </article>
+
+      <article class="counter-card">
+        <span class="label">Clean Characters</span>
+        <strong id="cleanCharCount">0</strong>
+        <small>Markdown stripped</small>
+      </article>
+
+      <article class="counter-card">
+        <span class="label">No Spaces</span>
+        <strong id="noSpaceCharCount">0</strong>
+        <small>Clean text only</small>
+      </article>
+
+      <article class="counter-card">
+        <span class="label">Paragraphs</span>
+        <strong id="paragraphCount">0</strong>
+        <small>Non-empty blocks</small>
+      </article>
+    </section>
+
+    <section class="editor-panel">
+      <div class="panel-title">
+        <h2>Paste text</h2>
+        <div class="buttons">
+          <button id="copyCleanBtn" type="button">Copy Clean Text</button>
+          <button id="clearBtn" type="button" class="secondary">Clear</button>
+        </div>
+      </div>
+
+      <textarea
+        id="textInput"
+        placeholder="Paste your text here... Markdown such as **bold**, # headings, links, lists and code markers will be stripped for the clean count."
+        spellcheck="true"
+      ></textarea>
+    </section>
+
+    <section class="preview-panel">
+      <h2>Markdown-stripped preview</h2>
+      <pre id="cleanPreview"></pre>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
