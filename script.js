@@ -34,21 +34,21 @@ const APPS = [
     name: "FinanceFox",
     emoji: "🏦",
     desc: "Income, outgoings, bills and debts — the money den.",
-    link: "financefox/",
+    link: "FinanceFox/",
     color: "#e8590c",
   },
   {
     name: "CountingFoxes",             // ← rename me
     emoji: "🦊",
     desc: "A simple word counting app",
-    link: "countingfoxes/",            // ← must match the folder name
+    link: "CountingFoxes/",            // ← must match the folder name
     color: "#7048e8",
   },
   {
     name: "ResponseFox",
     emoji: "📖",
     desc: "Comparing Responses ScratchPad.",
-    link: "responsefox/",
+    link: "ResponseFox/",
     color: "#0ca678",
   },
 
