@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoxDash 🦊</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wordmark">
+      <span class="fox" aria-hidden="true">🦊</span>
+      <h1>FoxDash</h1>
+    </div>
+    <p class="tagline">One den. All the apps.</p>
+
+    <!-- Theme toggle: the JS wires this up and swaps the icon -->
+    <button id="theme-toggle" aria-label="Switch theme">🌙</button>
+  </header>
+
+  <main>
+    <!--
+      ⚠️ DON'T ADD APP CARDS HERE BY HAND.
+      The cards are built automatically by script.js from the APPS list.
+      To add or remove an app, edit the APPS array at the top of script.js.
+    -->
+    <section id="app-grid" class="app-grid"></section>
+
+    <!-- Shown automatically if the APPS array is empty -->
+    <p id="empty-message" class="empty-message" hidden>
+      The den is empty. Add your first app in <code>script.js</code>.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Built by hand. Hosted on GitHub Pages.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
