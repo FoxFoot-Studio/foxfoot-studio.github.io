@@ -1,1 +1,0 @@
-# foxfoot-studio.github.io
